@@ -1,0 +1,7 @@
+node_modules
+dist
+.vercel
+.vite
+.DS_Store
+*.tsbuildinfo
+npm-debug.log*

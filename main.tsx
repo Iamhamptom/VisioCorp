@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { 
-  ArrowRight, 
-  Menu, 
-  X, 
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import {
+  ArrowRight,
+  Menu,
+  X,
   Globe, 
   Layers, 
   Cpu, 
@@ -11,12 +11,9 @@ import {
   Beaker, 
   Users, 
   Zap, 
-  Play, 
-  ExternalLink,
   ChevronRight,
   Monitor
 } from 'lucide-react';
-import { defineProperties } from "figma:react";
 
 // --- Image Fallback Component ---
 function ImageWithFallback(props: any) {
@@ -177,6 +174,544 @@ const PremiumButton = ({ children, variant = "dark", className = "", ...props }:
     <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
   </motion.button>
 );
+type ServiceSuite = 'business' | 'intel';
+type SuitePillar = { label: string };
+type Offering = {
+  name: string;
+  category: string;
+  engagement: string;
+  timing?: string;
+  outcome: string;
+  bullets: string[];
+};
+type OfferingGroup = { title: string; items: Offering[] };
+type ChartRow = {
+  service: string;
+  category: string;
+  engagement: string;
+  timing?: string;
+  outcome: string;
+};
+type PackageTier = { name: string; summary: string[] };
+
+const BUSINESS_PILLARS: SuitePillar[] = [
+  { label: "Launch & Web Presence" },
+  { label: "Sales System (CRM + Pipelines)" },
+  { label: "Lead Generation + Outreach Engine" },
+  { label: "Social Growth Engine" },
+  { label: "Retention (Loyalty + Referrals)" },
+  { label: "Subscriptions + Membership Revenue" },
+  { label: "Online Clubs / Communities" },
+  { label: "Team & Operations OS" },
+  { label: "Robbocopo (Business AI Robot)" },
+  { label: "Dashboards + Reporting" },
+  { label: "Support, Training + Maintenance" }
+];
+
+const BUSINESS_GROUPS: OfferingGroup[] = [
+  {
+    title: "One-Time Build & Setup",
+    items: [
+      {
+        name: "Website & Conversion Build",
+        category: "Launch",
+        engagement: "One-time",
+        outcome: "More leads, bookings, and a conversion-ready web presence.",
+        bullets: [
+          "High-converting website or landing page structure",
+          "Service, offer, and pricing layout designed for clarity",
+          "Booking, call, and WhatsApp conversion touchpoints",
+          "Basic SEO, analytics, and trust-building sections"
+        ]
+      },
+      {
+        name: "Booking & Payments Setup",
+        category: "Launch",
+        engagement: "One-time",
+        outcome: "A smoother booking and payment flow that reduces no-shows.",
+        bullets: [
+          "Booking logic for slots, staff, and confirmations",
+          "Payment links or checkout routing where relevant",
+          "Automated reminders and confirmation sequences"
+        ]
+      },
+      {
+        name: "CRM & Sales Pipeline Setup",
+        category: "Sales System",
+        engagement: "One-time",
+        outcome: "Leads tracked cleanly from first contact through repeat revenue.",
+        bullets: [
+          "Pipeline stages from new lead to repeat customer",
+          "Customer tags, segments, and lead routing",
+          "Lead capture forms tied into basic follow-up logic"
+        ]
+      },
+      {
+        name: "Pitch Builder",
+        category: "Sales Enablement",
+        engagement: "One-time",
+        outcome: "Proposal flows that help higher-value deals close faster.",
+        bullets: [
+          "Proposal mini-site template for cleaner presentations",
+          "Package tiers and add-ons positioned for decision-making",
+          "Case study, testimonial, and next-step structure"
+        ]
+      },
+      {
+        name: "Outreach System Setup",
+        category: "Growth",
+        engagement: "One-time",
+        outcome: "A repeatable outreach machine across email, WhatsApp, and DM.",
+        bullets: [
+          "Messaging frameworks and outreach scripts",
+          "Cold, warm, and reactivation sequence templates",
+          "Follow-up workflow tied back into CRM visibility"
+        ]
+      },
+      {
+        name: "Social Growth Engine Setup",
+        category: "Growth",
+        engagement: "One-time",
+        outcome: "Consistent content and promotional execution month after month.",
+        bullets: [
+          "Content calendar and campaign structure",
+          "Post, story, and banner template system",
+          "Caption frameworks and seasonal promotion themes"
+        ]
+      },
+      {
+        name: "Loyalty & Referral System Setup",
+        category: "Retention",
+        engagement: "One-time",
+        outcome: "Higher repeat visits and stronger referral momentum.",
+        bullets: [
+          "QR-based joining or rewards entry flow",
+          "Points, stamps, or tiered reward logic",
+          "Referral tracking and inactive customer win-back flow"
+        ]
+      },
+      {
+        name: "Memberships & Subscriptions Setup",
+        category: "Revenue",
+        engagement: "One-time",
+        outcome: "Recurring revenue infrastructure for packaged offers and access.",
+        bullets: [
+          "Membership tiers with clear benefits and rules",
+          "Billing and renewal reminder structure",
+          "Member access flow for ongoing value delivery"
+        ]
+      },
+      {
+        name: "Online Club / Community Setup",
+        category: "Community",
+        engagement: "One-time",
+        outcome: "A customer club that increases retention and audience lock-in.",
+        bullets: [
+          "Community hub setup for updates, exclusives, and events",
+          "Private content access rules",
+          "Challenge, giveaway, and referral engagement mechanics"
+        ]
+      },
+      {
+        name: "Team & Task Management Setup",
+        category: "Ops OS",
+        engagement: "One-time",
+        outcome: "Clearer internal execution with structure, roles, and accountability.",
+        bullets: [
+          "Workspace setup for teams, roles, and permissions",
+          "Task boards and SOP libraries",
+          "Onboarding checklists and operational workflows"
+        ]
+      },
+      {
+        name: "Robbocopo Setup",
+        category: "AI",
+        engagement: "One-time",
+        outcome: "An AI front desk and internal assistant for qualification and routing.",
+        bullets: [
+          "Branded assistant identity, tone, and knowledge setup",
+          "Lead qualification and capture logic",
+          "Sales, support, and booking routing flows"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Monthly Retainers",
+    items: [
+      {
+        name: "Growth Ops Retainer",
+        category: "Optimization",
+        engagement: "Monthly",
+        outcome: "Continuous campaign improvement and sharper performance over time.",
+        bullets: [
+          "Promo planning and execution guidance",
+          "Funnel improvements and offer testing",
+          "Conversion reviews, reporting, and asset refreshes"
+        ]
+      },
+      {
+        name: "Lead Gen & Outreach Ops Retainer",
+        category: "Growth",
+        engagement: "Monthly",
+        outcome: "More meetings and sales through disciplined outbound execution.",
+        bullets: [
+          "Lead list building and segmentation",
+          "Sequence deployment and follow-up management",
+          "Booking optimization and pipeline reporting"
+        ]
+      },
+      {
+        name: "Social Engine Retainer",
+        category: "Marketing",
+        engagement: "Monthly",
+        outcome: "Steady brand output with stronger campaign consistency.",
+        bullets: [
+          "Monthly content calendar delivery",
+          "Content pack production and campaign copy",
+          "Community engagement planning"
+        ]
+      },
+      {
+        name: "CRM & Automation Retainer",
+        category: "Systems",
+        engagement: "Monthly",
+        outcome: "Stable systems with ongoing maintenance and upgrades.",
+        bullets: [
+          "CRM upkeep and pipeline improvements",
+          "Automation monitoring and tuning",
+          "Workflow updates, templates, and team support"
+        ]
+      },
+      {
+        name: "Robbocopo Care Plan",
+        category: "AI",
+        engagement: "Monthly",
+        outcome: "Ongoing assistant quality, expansion, and refinement.",
+        bullets: [
+          "Knowledge base and flow updates",
+          "Quality checks and scenario expansion",
+          "Performance review and script refinement"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Add-Ons & Upgrades",
+    items: [
+      {
+        name: "Gamification Add-on",
+        category: "Experience",
+        engagement: "Optional Module",
+        outcome: "Interactive campaigns that drive attention, repeat visits, and reward loops.",
+        bullets: [
+          "Spin, scratch, trivia, or challenge mechanics",
+          "Leaderboards and reward logic",
+          "Giveaway automation tied to engagement"
+        ]
+      },
+      {
+        name: "Multi-Branch / Franchise Add-on",
+        category: "Scale",
+        engagement: "Optional Module",
+        outcome: "More control and consistency across multiple locations or operators.",
+        bullets: [
+          "Branch-level dashboards and role access",
+          "Location reporting and playbooks",
+          "Standardized offers and campaign logic"
+        ]
+      },
+      {
+        name: "Advanced Analytics Add-on",
+        category: "Analytics",
+        engagement: "Optional Module",
+        outcome: "Clearer visibility into performance, bottlenecks, and growth levers.",
+        bullets: [
+          "KPI dashboards for leads, bookings, and conversion",
+          "Monthly insight summaries and recommendations",
+          "Campaign attribution where data is available"
+        ]
+      },
+      {
+        name: "Integrations Add-on",
+        category: "Systems",
+        engagement: "Optional Module",
+        outcome: "Connected tools so data, messaging, and reporting stay aligned.",
+        bullets: [
+          "Booking, POS, forms, and messaging sync",
+          "CRM-linked data imports and exports",
+          "Reporting flows across your operating stack"
+        ]
+      },
+      {
+        name: "Brand Pack Add-on",
+        category: "Creative",
+        engagement: "Optional Module",
+        outcome: "Campaign-ready visuals that keep promotions sharp and consistent.",
+        bullets: [
+          "Brand refresh assets and template kit",
+          "Menus, posters, and story-ready layouts",
+          "Visual system support for recurring campaigns"
+        ]
+      }
+    ]
+  }
+];
+
+const BUSINESS_CHART_ROWS: ChartRow[] = [
+  { service: "Website & Conversion Build", category: "Launch", engagement: "One-time", outcome: "More leads and bookings" },
+  { service: "Booking & Payments Setup", category: "Launch", engagement: "One-time", outcome: "Fewer no-shows and smoother sales" },
+  { service: "CRM & Pipeline Setup", category: "Sales System", engagement: "One-time", outcome: "Leads tracked through to close" },
+  { service: "Pitch Builder", category: "Sales Enablement", engagement: "One-time", outcome: "Faster closing via proposals" },
+  { service: "Outreach System Setup", category: "Growth", engagement: "One-time", outcome: "Repeatable outreach machine" },
+  { service: "Social Engine Setup", category: "Growth", engagement: "One-time", outcome: "Consistent content and promotions" },
+  { service: "Loyalty & Referral Setup", category: "Retention", engagement: "One-time", outcome: "Higher repeat visits" },
+  { service: "Memberships Setup", category: "Revenue", engagement: "One-time", outcome: "Subscription income" },
+  { service: "Online Club Setup", category: "Community", engagement: "One-time", outcome: "Audience lock-in" },
+  { service: "Team & Task Setup", category: "Ops OS", engagement: "One-time", outcome: "Structure and execution" },
+  { service: "Robbocopo Setup", category: "AI", engagement: "One-time", outcome: "AI receptionist and assistant" },
+  { service: "Growth Ops Retainer", category: "Optimization", engagement: "Monthly", outcome: "Continuous improvement" },
+  { service: "Lead+Outreach Ops Retainer", category: "Growth", engagement: "Monthly", outcome: "More meetings and sales" },
+  { service: "Social Retainer", category: "Marketing", engagement: "Monthly", outcome: "Output and consistency" },
+  { service: "CRM & Automation Retainer", category: "Systems", engagement: "Monthly", outcome: "Stability and upgrades" },
+  { service: "Robbocopo Care Plan", category: "AI", engagement: "Monthly", outcome: "Quality and expansion" }
+];
+
+const BUSINESS_PACKAGES: PackageTier[] = [
+  {
+    name: "Suite Lite",
+    summary: [
+      "Website",
+      "Booking",
+      "Basic CRM",
+      "Analytics"
+    ]
+  },
+  {
+    name: "Suite Pro",
+    summary: [
+      "Suite Lite foundation",
+      "Outreach System",
+      "Pitch Builder",
+      "Social Engine Setup"
+    ]
+  },
+  {
+    name: "Suite Elite",
+    summary: [
+      "Suite Pro foundation",
+      "Loyalty and Referral",
+      "Memberships and Online Club",
+      "Robbocopo and Team Ops"
+    ]
+  },
+  {
+    name: "Enterprise",
+    summary: [
+      "Multi-branch support",
+      "Advanced dashboards",
+      "Custom workflows",
+      "Governance structure"
+    ]
+  }
+];
+
+const INTEL_PILLARS: SuitePillar[] = [
+  { label: "Market & Competitor Intelligence" },
+  { label: "Customer Demand & Trend Intelligence" },
+  { label: "Revenue & Sales Intelligence" },
+  { label: "Operations & Efficiency Intelligence" },
+  { label: "AI Transformation & Governance" },
+  { label: "Ongoing Intel Subscriptions" }
+];
+
+const INTEL_GROUPS: OfferingGroup[] = [
+  {
+    title: "One-Time Intel Packs",
+    items: [
+      {
+        name: "Visio Intel Snapshot",
+        category: "Diagnostic",
+        engagement: "One-time",
+        timing: "3-5 days",
+        outcome: "Fast clarity with ranked opportunities and a 30-day action path.",
+        bullets: [
+          "Quick competitor view across local and category players",
+          "Top opportunities ranked by likely impact",
+          "30-day action plan with KPI targets",
+          "Sales, follow-up, and WhatsApp script pack"
+        ]
+      },
+      {
+        name: "Market Map & Competitor Benchmark",
+        category: "Market Intel",
+        engagement: "One-time",
+        timing: "7-10 days",
+        outcome: "Stronger positioning through deeper competitive visibility.",
+        bullets: [
+          "Competitor database and positioning scan",
+          "Offer and pricing benchmark review",
+          "Review mining for pain points and winning patterns",
+          "Market gap recommendations on where to win"
+        ]
+      },
+      {
+        name: "Customer Demand & Trend Radar",
+        category: "Demand Intel",
+        engagement: "One-time",
+        timing: "7-10 days",
+        outcome: "Sharper offers and better-timed campaigns based on demand signals.",
+        bullets: [
+          "Demand signal analysis across customer interest",
+          "Seasonality and peak-time insight windows",
+          "90-day promotional direction",
+          "Persona and buying-trigger summary"
+        ]
+      },
+      {
+        name: "Revenue Leak Audit",
+        category: "Revenue Intel",
+        engagement: "One-time",
+        timing: "7-10 days",
+        outcome: "Find where revenue is lost and where conversion can improve next.",
+        bullets: [
+          "Revenue leak map across the customer journey",
+          "Conversion lift recommendations for offers and timing",
+          "Retention and win-back guidance",
+          "KPI scoreboard and measurement framework"
+        ]
+      },
+      {
+        name: "Pricing & Packaging Lab",
+        category: "Revenue Intel",
+        engagement: "One-time",
+        timing: "5-7 days",
+        outcome: "Clearer packages, healthier margins, and smarter promotional guardrails.",
+        bullets: [
+          "Pricing model and margin review",
+          "Package recommendations across key tiers",
+          "Upsell and cross-sell mapping",
+          "Discounting guardrails that protect profit"
+        ]
+      },
+      {
+        name: "Sales Messaging & Script Pack",
+        category: "Sales Intel",
+        engagement: "One-time",
+        timing: "3-5 days",
+        outcome: "Stronger messaging that reduces drop-off and speeds up closes.",
+        bullets: [
+          "Inbound, outbound, and follow-up scripts",
+          "Objection handling frameworks",
+          "DM and email messaging support",
+          "A first-message to booked flow"
+        ]
+      }
+    ]
+  },
+  {
+    title: "AI Transformation",
+    items: [
+      {
+        name: "AI Adoption Roadmap",
+        category: "AI Strategy",
+        engagement: "One-time",
+        timing: "10-14 days",
+        outcome: "A phased AI plan ranked by ROI, effort, and operational relevance.",
+        bullets: [
+          "AI opportunity map across the business",
+          "30, 60, and 90-day adoption priorities",
+          "Tool-stack recommendations with scalability in mind",
+          "Role-based staff enablement guidance"
+        ]
+      },
+      {
+        name: "AI Governance & Policy Pack",
+        category: "AI Governance",
+        engagement: "One-time",
+        timing: "7-10 days",
+        outcome: "Safer AI usage with policy, controls, and mandatory review guardrails.",
+        bullets: [
+          "AI usage policy and staff guidelines",
+          "Data handling and output safety rules",
+          "Risk register with mitigation direction",
+          "Approval flow recommendations where human review is required"
+        ]
+      }
+    ]
+  },
+  {
+    title: "Ongoing Intel Subscriptions",
+    items: [
+      {
+        name: "Competitor Watch",
+        category: "Intel Subscription",
+        engagement: "Subscription",
+        timing: "Monthly",
+        outcome: "Stay current on market moves and what to adjust next.",
+        bullets: [
+          "Competitor changes across offers, pricing, and promos",
+          "Market movement summaries",
+          "Recommended response actions",
+          "Script updates where needed"
+        ]
+      },
+      {
+        name: "Trend Alerts",
+        category: "Intel Subscription",
+        engagement: "Subscription",
+        timing: "Weekly / Bi-weekly",
+        outcome: "Stay early on the trends shaping offers, promos, and content timing.",
+        bullets: [
+          "Local and category trend bulletins",
+          "Promo ideas with suggested timing",
+          "Fast notes on what is working now"
+        ]
+      },
+      {
+        name: "Visio Intel Partnership",
+        category: "Retainer",
+        engagement: "Retainer",
+        timing: "Monthly",
+        outcome: "A long-term AI and data partner for ongoing clarity and guidance.",
+        bullets: [
+          "Monthly intel report and scoreboard",
+          "Strategy call with execution guidance",
+          "KPI framework updates",
+          "Quarterly repositioning recommendations"
+        ]
+      }
+    ]
+  }
+];
+
+const INTEL_CHART_ROWS: ChartRow[] = [
+  { service: "Intel Snapshot", category: "Diagnostic", engagement: "One-time", timing: "3-5 days", outcome: "Fast clarity and top actions" },
+  { service: "Competitor Benchmark", category: "Market Intel", engagement: "One-time", timing: "7-10 days", outcome: "Beat competitors with positioning" },
+  { service: "Demand & Trend Radar", category: "Demand Intel", engagement: "One-time", timing: "7-10 days", outcome: "Better offers and campaign timing" },
+  { service: "Revenue Leak Audit", category: "Revenue Intel", engagement: "One-time", timing: "7-10 days", outcome: "Higher conversion and repeat" },
+  { service: "Pricing & Packaging Lab", category: "Revenue Intel", engagement: "One-time", timing: "5-7 days", outcome: "Higher margin and clear tiers" },
+  { service: "Sales Script Pack", category: "Sales Intel", engagement: "One-time", timing: "3-5 days", outcome: "Close faster with fewer drop-offs" },
+  { service: "AI Adoption Roadmap", category: "AI Strategy", engagement: "One-time", timing: "10-14 days", outcome: "AI plan ranked by ROI" },
+  { service: "AI Governance Pack", category: "AI Governance", engagement: "One-time", timing: "7-10 days", outcome: "Safe use, policy, and control" },
+  { service: "Competitor Watch", category: "Intel Subscription", engagement: "Subscription", timing: "Monthly", outcome: "Always know market moves" },
+  { service: "Trend Alerts", category: "Intel Subscription", engagement: "Subscription", timing: "Weekly / Bi-weekly", outcome: "Stay early and stay relevant" },
+  { service: "Intel Partnership", category: "Retainer", engagement: "Retainer", timing: "Monthly", outcome: "Ongoing AI and data partnership" }
+];
+
+const INTEL_EDITIONS = [
+  "Beauty / Hair / Makeup Edition",
+  "Dental / Aesthetics / Clinics Edition",
+  "Hospitality / Restaurants Edition",
+  "Private Schools Edition"
+];
+
+const INTEL_STANDARD_INPUTS = [
+  "Business name, location(s), and current services or offers",
+  "Ideal customer and typical value band, if known",
+  "Competitor names, if available",
+  "Any existing metrics they can share"
+];
 
 // --- Components ---
 
@@ -213,6 +748,7 @@ const Navbar = () => {
             className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide"
           >
             <a href="#products" className="text-gray-500 hover:text-black transition-colors">Products</a>
+            <a href="#services" className="text-gray-500 hover:text-black transition-colors">Services</a>
             <a href="#divisions" className="text-gray-500 hover:text-black transition-colors">Divisions</a>
             <a href="#media" className="text-gray-500 hover:text-black transition-colors">MirageMirror</a>
             <a href="#radio" className="text-gray-500 hover:text-black transition-colors">Radio</a>
@@ -238,6 +774,7 @@ const Navbar = () => {
           >
             <div className="px-4 pt-2 pb-6 space-y-4 font-medium">
               <a href="#products" className="block text-gray-600 hover:text-black hover:translate-x-1 transition-transform">Products</a>
+              <a href="#services" className="block text-gray-600 hover:text-black hover:translate-x-1 transition-transform">Services</a>
               <a href="#divisions" className="block text-gray-600 hover:text-black hover:translate-x-1 transition-transform">Divisions</a>
               <a href="#media" className="block text-gray-600 hover:text-black hover:translate-x-1 transition-transform">MirageMirror</a>
               <a href="#radio" className="block text-gray-600 hover:text-black hover:translate-x-1 transition-transform">Radio</a>
@@ -443,6 +980,336 @@ const ShippingCore = () => (
     </motion.div>
 );
 
+const SuiteSwitcher = ({
+    activeSuite,
+    setActiveSuite
+}: {
+    activeSuite: ServiceSuite;
+    setActiveSuite: (suite: ServiceSuite) => void;
+}) => {
+    const suites = [
+        {
+            id: 'business' as ServiceSuite,
+            label: "Visio Business Suite",
+            description: "Upgradeable Business OS"
+        },
+        {
+            id: 'intel' as ServiceSuite,
+            label: "Visio Intel",
+            description: "Powered by Visio Research Labs"
+        }
+    ];
+
+    return (
+        <div className="inline-flex flex-col sm:flex-row gap-2 p-2 bg-white border border-gray-200 rounded-3xl shadow-sm">
+            {suites.map((suite) => {
+                const isActive = suite.id === activeSuite;
+
+                return (
+                    <button
+                        key={suite.id}
+                        type="button"
+                        onClick={() => setActiveSuite(suite.id)}
+                        aria-pressed={isActive}
+                        className={`text-left rounded-2xl px-5 py-4 transition-all min-w-[230px] ${
+                            isActive
+                                ? 'bg-black text-white shadow-lg'
+                                : 'bg-white text-gray-900 hover:bg-gray-50'
+                        }`}
+                    >
+                        <span className="block text-sm font-semibold tracking-wide">{suite.label}</span>
+                        <span className={`block text-xs mt-1 ${isActive ? 'text-white/70' : 'text-gray-500'}`}>
+                            {suite.description}
+                        </span>
+                    </button>
+                );
+            })}
+        </div>
+    );
+};
+
+const ServicePillars = ({ pillars }: { pillars: SuitePillar[] }) => (
+    <div className="flex flex-wrap gap-3">
+        {pillars.map((pillar) => (
+            <span
+                key={pillar.label}
+                className="inline-flex items-center px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700"
+            >
+                {pillar.label}
+            </span>
+        ))}
+    </div>
+);
+
+const OfferingCard = ({ item }: { item: Offering }) => (
+    <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm hover:shadow-lg transition-shadow">
+        <div className="flex flex-wrap gap-2 mb-4">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.18em] uppercase bg-gray-100 text-gray-700">
+                {item.category}
+            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.18em] uppercase bg-black text-white">
+                {item.engagement}
+            </span>
+            {item.timing && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.18em] uppercase bg-gray-50 text-gray-500 border border-gray-200">
+                    {item.timing}
+                </span>
+            )}
+        </div>
+        <h4 className="text-xl font-bold text-black mb-3">{item.name}</h4>
+        <p className="text-gray-600 leading-relaxed mb-6">{item.outcome}</p>
+        <div className="space-y-3">
+            {item.bullets.map((bullet) => (
+                <div key={bullet} className="flex items-start gap-3 text-sm text-gray-600">
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-black shrink-0"></span>
+                    <span>{bullet}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+const OfferingGroupSection = ({ title, items }: OfferingGroup) => (
+    <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Offerings</span>
+                <h3 className="text-3xl font-bold text-black mt-2">{title}</h3>
+            </div>
+            <p className="text-sm text-gray-500 max-w-2xl">
+                Tailored engagements designed to slot into the right part of a client&apos;s growth, operations, or intelligence stack.
+            </p>
+        </div>
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {items.map((item) => (
+                <OfferingCard key={item.name} item={item} />
+            ))}
+        </div>
+    </div>
+);
+
+const ServiceChartList = ({
+    title,
+    description,
+    rows,
+    showTiming = false,
+    timingLabel = "Turnaround / Cadence"
+}: {
+    title: string;
+    description: string;
+    rows: ChartRow[];
+    showTiming?: boolean;
+    timingLabel?: string;
+}) => (
+    <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Snapshot</span>
+                <h3 className="text-3xl font-bold text-black mt-2">{title}</h3>
+            </div>
+            <p className="text-sm text-gray-500 max-w-2xl">{description}</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+            {rows.map((row) => (
+                <div key={row.service} className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                    <h4 className="text-lg font-bold text-black mb-4">{row.service}</h4>
+                    <div className={`grid gap-4 ${showTiming ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+                        <div>
+                            <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-1">Category</p>
+                            <p className="text-sm text-gray-700">{row.category}</p>
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-1">Engagement</p>
+                            <p className="text-sm text-gray-700">{row.engagement}</p>
+                        </div>
+                        {showTiming && (
+                            <div>
+                                <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-1">{timingLabel}</p>
+                                <p className="text-sm text-gray-700">{row.timing}</p>
+                            </div>
+                        )}
+                        <div className={showTiming ? 'sm:col-span-3' : 'sm:col-span-2'}>
+                            <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-1">Outcome</p>
+                            <p className="text-sm text-gray-700">{row.outcome}</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+const PackageTierCard = ({ tier }: { tier: PackageTier }) => (
+    <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+        <h4 className="text-2xl font-bold text-black mb-5">{tier.name}</h4>
+        <div className="space-y-3">
+            {tier.summary.map((item) => (
+                <div key={item} className="flex items-start gap-3 text-sm text-gray-600">
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-black shrink-0"></span>
+                    <span>{item}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+const StandardInputsPanel = ({ items }: { items: string[] }) => (
+    <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+        <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Starting Inputs</span>
+        <h3 className="text-3xl font-bold text-black mt-2 mb-3">Standard Client Inputs</h3>
+        <p className="text-gray-500 mb-6">What we need to start generating useful analysis, direction, and recommendations.</p>
+        <div className="space-y-4">
+            {items.map((item) => (
+                <div key={item} className="flex items-start gap-3 text-sm text-gray-600">
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-black shrink-0"></span>
+                    <span>{item}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+const ServicesCTA = ({ supportingCopy }: { supportingCopy: string }) => (
+    <div className="bg-black text-white rounded-3xl p-8 md:p-10">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div className="max-w-3xl">
+                <span className="text-white/60 font-medium tracking-widest uppercase text-xs">Custom-Scoped Engagements</span>
+                <h3 className="text-3xl md:text-4xl font-bold mt-3 mb-3">Book Consultation</h3>
+                <p className="text-gray-300 leading-relaxed">{supportingCopy}</p>
+            </div>
+            <button
+                type="button"
+                className="group inline-flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+            >
+                Book Consultation
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+        </div>
+    </div>
+);
+
+const BusinessSuitePanel = () => (
+    <div className="space-y-16">
+        <div className="grid lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.9fr)] gap-8">
+            <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Visio Business Suite</span>
+                <h3 className="text-4xl font-bold text-black mt-3 mb-3">Upgradeable Business OS</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                    Website + Sales + CRM + Growth + Team Ops + Memberships + Community + Robbocopo.
+                </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Scope</span>
+                <h3 className="text-2xl font-bold text-black mt-3 mb-3">Built around the client</h3>
+                <p className="text-gray-600 leading-relaxed">
+                    Every Business Suite engagement is tailored to the operating model, growth goals, and complexity of the business.
+                </p>
+            </div>
+        </div>
+
+        <div className="space-y-5">
+            <div>
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Service Pillars</span>
+                <h3 className="text-3xl font-bold text-black mt-2">Business stack coverage</h3>
+            </div>
+            <ServicePillars pillars={BUSINESS_PILLARS} />
+        </div>
+
+        {BUSINESS_GROUPS.map((group) => (
+            <OfferingGroupSection key={group.title} {...group} />
+        ))}
+
+        <ServiceChartList
+            title="Business Suite Service Chart"
+            description="A compact scan of the core Business Suite offer stack for quick navigation and qualification."
+            rows={BUSINESS_CHART_ROWS}
+        />
+
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Packages</span>
+                    <h3 className="text-3xl font-bold text-black mt-2">Easy-to-sell tiers</h3>
+                </div>
+                <p className="text-sm text-gray-500 max-w-2xl">
+                    Package scope is still tailored to each client, but these tiers make the offering easier to understand and scope.
+                </p>
+            </div>
+            <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+                {BUSINESS_PACKAGES.map((tier) => (
+                    <PackageTierCard key={tier.name} tier={tier} />
+                ))}
+            </div>
+        </div>
+
+        <ServicesCTA supportingCopy="We scope every build around your business model, goals, and operating complexity." />
+    </div>
+);
+
+const IntelSuitePanel = () => (
+    <div className="space-y-16">
+        <div className="grid lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)] gap-8">
+            <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Visio Intel</span>
+                <h3 className="text-4xl font-bold text-black mt-3 mb-2">Powered by Visio Research Labs</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">Your Data + AI Partner for sharper decisions, stronger timing, and better strategic direction.</p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Positioning</span>
+                <h3 className="text-2xl font-bold text-black mt-3 mb-3">Strategy, analysis, and guidance</h3>
+                <p className="text-gray-600 leading-relaxed">
+                    Visio Intel is focused on intelligence, recommendations, prioritization, and governance guidance, not implementation delivery.
+                </p>
+            </div>
+        </div>
+
+        <div className="space-y-5">
+            <div>
+                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Service Pillars</span>
+                <h3 className="text-3xl font-bold text-black mt-2">Intelligence coverage</h3>
+            </div>
+            <ServicePillars pillars={INTEL_PILLARS} />
+        </div>
+
+        {INTEL_GROUPS.map((group) => (
+            <OfferingGroupSection key={group.title} {...group} />
+        ))}
+
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Industry Editions</span>
+                    <h3 className="text-3xl font-bold text-black mt-2">Tailored sector variants</h3>
+                </div>
+                <p className="text-sm text-gray-500 max-w-2xl">
+                    Any core Intel pack can be scoped as an industry edition with sector-specific analysis priorities.
+                </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+                {INTEL_EDITIONS.map((edition) => (
+                    <span
+                        key={edition}
+                        className="inline-flex items-center px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700"
+                    >
+                        {edition}
+                    </span>
+                ))}
+            </div>
+        </div>
+
+        <ServiceChartList
+            title="Visio Intel Service Chart"
+            description="A quick-scan view of the available diagnostics, subscriptions, and advisory paths."
+            rows={INTEL_CHART_ROWS}
+            showTiming={true}
+        />
+
+        <StandardInputsPanel items={INTEL_STANDARD_INPUTS} />
+
+        <ServicesCTA supportingCopy="Book a consultation to scope the right intel pack, advisory path, or ongoing partnership." />
+    </div>
+);
+
 const ShippingSection = ({ product1Image, product2Image, product3Image }: any) => {
     const products = [
         {
@@ -554,6 +1421,43 @@ const ShippingSection = ({ product1Image, product2Image, product3Image }: any) =
                         <ShippingOrb {...products[2]} index={2} />
                     </div>
                 </div>
+            </div>
+        </section>
+    );
+};
+
+const ServicesSection = () => {
+    const [activeSuite, setActiveSuite] = useState<ServiceSuite>('business');
+
+    return (
+        <section id="services" className="py-24 bg-gray-50 border-y border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mb-10">
+                    <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Services</span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-black tracking-tight mt-3 mb-5">
+                        Upgradeable Business Systems + Strategic Intelligence
+                    </h2>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                        Visio offers operating systems for growth, sales, and execution alongside intelligence-led advisory for sharper
+                        decisions. Every engagement is custom-scoped and billed according to the client context, technical scope, and
+                        growth goals.
+                    </p>
+                </div>
+
+                <SuiteSwitcher activeSuite={activeSuite} setActiveSuite={setActiveSuite} />
+
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeSuite}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -16 }}
+                        transition={{ duration: 0.25 }}
+                        className="mt-10"
+                    >
+                        {activeSuite === 'business' ? <BusinessSuitePanel /> : <IntelSuitePanel />}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </section>
     );
@@ -913,13 +1817,13 @@ const Footer = () => {
 
 // --- Main Export ---
 
-export default function LandingPage({ 
-    heroTitle, 
-    heroSubtitle, 
-    heroImage,
-    product1Image,
-    product2Image,
-    product3Image
+export default function LandingPage({
+    heroTitle = "Think Ahead. See Ahead",
+    heroSubtitle = "VisioCorp builds AI systems, creative tools, and culture products for the next era of African excellence.",
+    heroImage = "https://images.unsplash.com/photo-1525770473232-8ad750e600ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBjb3Jwb3JhdGUlMjBhcmNoaXRlY3R1cmUlMjBzaWx2ZXIlMjB3aGl0ZXxlbnwxfHx8fDE3NzA1MTM5OTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    product1Image = "https://images.unsplash.com/photo-1634836023845-eddbfe9937da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzb2Z0d2FyZSUyMGRhc2hib2FyZCUyMHVpJTIwZGFyayUyMG1vZGV8ZW58MXx8fHwxNzcwNTE1MjIxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    product2Image = "https://images.unsplash.com/photo-1733670752261-1cfaf1c84f3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMDNkJTIwZ2VvbWV0cmljJTIwc2hhcGUlMjByb2JvdHxlbnwxfHx8fDE3NzA1MTUyMjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    product3Image = "https://images.unsplash.com/photo-1759912804199-a104b710a308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHNvdW5kJTIwd2F2ZSUyMHZpc3VhbGl6YXRpb24lMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3MDUxNTIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
 }: any) {
   return (
     <div className="font-sans text-gray-900 bg-white selection:bg-black selection:text-white relative overflow-x-hidden">
@@ -935,6 +1839,7 @@ export default function LandingPage({
         product2Image={product2Image}
         product3Image={product3Image}
       />
+      <ServicesSection />
       <SectionDivider />
       <ProcessSection />
       <SectionDivider />
@@ -947,37 +1852,3 @@ export default function LandingPage({
     </div>
   );
 }
-
-// --- Property Definitions ---
-defineProperties(LandingPage, {
-  heroTitle: {
-    label: "Hero Title",
-    type: "string",
-    defaultValue: "Think Ahead. See Ahead"
-  },
-  heroSubtitle: {
-    label: "Hero Subtitle",
-    type: "string",
-    defaultValue: "VisioCorp builds AI systems, creative tools, and culture products for the next era of African excellence."
-  },
-  heroImage: {
-    label: "Hero Image",
-    type: "image",
-    defaultValue: "https://images.unsplash.com/photo-1525770473232-8ad750e600ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBjb3Jwb3JhdGUlMjBhcmNoaXRlY3R1cmUlMjBzaWx2ZXIlMjB3aGl0ZXxlbnwxfHx8fDE3NzA1MTM5OTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-  },
-  product1Image: {
-    label: "Product 1 Image",
-    type: "image",
-    defaultValue: "https://images.unsplash.com/photo-1634836023845-eddbfe9937da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzb2Z0d2FyZSUyMGRhc2hib2FyZCUyMHVpJTIwZGFyayUyMG1vZGV8ZW58MXx8fHwxNzcwNTE1MjIxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-  },
-  product2Image: {
-    label: "Product 2 Image",
-    type: "image",
-    defaultValue: "https://images.unsplash.com/photo-1733670752261-1cfaf1c84f3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMDNkJTIwZ2VvbWV0cmljJTIwc2hhcGUlMjByb2JvdHxlbnwxfHx8fDE3NzA1MTUyMjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-  },
-  product3Image: {
-    label: "Product 3 Image",
-    type: "image",
-    defaultValue: "https://images.unsplash.com/photo-1759912804199-a104b710a308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHNvdW5kJTIwd2F2ZSUyMHZpc3VhbGl6YXRpb24lMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3MDUxNTIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-  },
-});
