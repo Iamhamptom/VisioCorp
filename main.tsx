@@ -885,9 +885,9 @@ const Hero = ({
                         className="w-full h-full"
                     >
                         <ImageWithFallback 
-                            src="https://images.unsplash.com/photo-1525770473232-8ad750e600ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBjb3Jwb3JhdGUlMjBhcmNoaXRlY3R1cmUlMjBzaWx2ZXIlMjB3aGl0ZXxlbnwxfHx8fDE3NzA1MTM5OTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
-                            alt="VisioCorp HQ Abstract"
-                            className="w-full h-full object-cover mix-blend-multiply grayscale opacity-90 transition-opacity duration-1000 group-hover:opacity-100"
+                            src="/IMG_6662.jpg" 
+                            alt="VisioCorp"
+                            className="w-full h-full object-cover opacity-90 transition-opacity duration-1000 group-hover:opacity-100"
                         />
                     </motion.div>
                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent"></div>
@@ -1815,15 +1815,40 @@ const Footer = () => {
     )
 }
 
+
+// --- Transition Video Section ---
+const TransitionVideo = () => (
+    <section className="relative w-full overflow-hidden bg-black">
+        <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+            className="w-full"
+        >
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-auto object-cover"
+                style={{ maxHeight: '500px' }}
+            >
+                <source src="/Assets/transition video 1.mp4" type="video/mp4" />
+            </video>
+        </motion.div>
+    </section>
+);
+
 // --- Main Export ---
 
 export default function LandingPage({
     heroTitle = "Think Ahead. See Ahead",
     heroSubtitle = "VisioCorp builds AI systems, creative tools, and culture products for the next era of African excellence.",
-    heroImage = "https://images.unsplash.com/photo-1525770473232-8ad750e600ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBjb3Jwb3JhdGUlMjBhcmNoaXRlY3R1cmUlMjBzaWx2ZXIlMjB3aGl0ZXxlbnwxfHx8fDE3NzA1MTM5OTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    product1Image = "https://images.unsplash.com/photo-1634836023845-eddbfe9937da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzb2Z0d2FyZSUyMGRhc2hib2FyZCUyMHVpJTIwZGFyayUyMG1vZGV8ZW58MXx8fHwxNzcwNTE1MjIxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    product2Image = "https://images.unsplash.com/photo-1733670752261-1cfaf1c84f3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMDNkJTIwZ2VvbWV0cmljJTIwc2hhcGUlMjByb2JvdHxlbnwxfHx8fDE3NzA1MTUyMjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    product3Image = "https://images.unsplash.com/photo-1759912804199-a104b710a308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHNvdW5kJTIwd2F2ZSUyMHZpc3VhbGl6YXRpb24lMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3MDUxNTIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    heroImage = "/IMG_6662.jpg",
+    product1Image = "/Assets/Visio Pr Ai Assistant.png",
+    product2Image = "/Assets/Studio Camp.png",
+    product3Image = "/Assets/HGA Radio.jpg"
 }: any) {
   return (
     <div className="font-sans text-gray-900 bg-white selection:bg-black selection:text-white relative overflow-x-hidden">
@@ -1834,6 +1859,7 @@ export default function LandingPage({
         subtitle={heroSubtitle} 
         imageUrl={heroImage}
       />
+      <TransitionVideo />
       <ShippingSection 
         product1Image={product1Image}
         product2Image={product2Image}
